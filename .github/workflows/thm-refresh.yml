@@ -1,0 +1,22 @@
+name: Daily TryHackMe Refresh
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Tells GitHub to run this automatically every midnight
+  workflow_dispatch: # Allows you to run it manually anytime
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Update Hidden File
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          date > .last-updated
+          git add .last-updated
+          git commit -m "Auto refresh TryHackMe daily stats [skip ci]" || exit 0
+          git push
